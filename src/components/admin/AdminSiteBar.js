@@ -784,7 +784,7 @@ const AdminSiteBar = ({ Current_User }) => {
                       <Link className="dropdown-item" to={uiRoutes.admin.bachatgat.add}>
                         {content.add_saving_group}
                       </Link>
-                      <Link className="dropdown-item" to={uiRoutes.admin.bachatgat.lists}>
+                      <Link className="dropdown-item" to={uiRoutes.admin.bachatgat.show}>
                         {content.show_saving_group}
                       </Link>
 
