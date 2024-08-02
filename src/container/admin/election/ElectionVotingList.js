@@ -7,6 +7,9 @@ import marathi from '../../../translationData/marathi.json';
 import hindi from '../../../translationData/hindi.json';
 import english from '../../../translationData/english.json';
 import { apiRoutes } from "../../../routes/api/apiRoutes";
+import PaginationBar from '../../../components/admin/PaginationBar';
+import SearchBar from '../../../components/admin/SearchBar';
+
 
 const ElectionVotingList = () => {
     const [isDeleted, setIsDeleted] = useState(false);
@@ -14,6 +17,9 @@ const ElectionVotingList = () => {
     const [responce, loading, error, callAPI, statusCode] = useApiCallHooks();
     const [voters, setVoter] = useState([]);
     const [toggledVoters, setToggledVoters] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const recordsPerPage = 10;
 
     useEffect(() => {
         callAPI('get', "get-voting-voter-list", "");
@@ -21,23 +27,14 @@ const ElectionVotingList = () => {
     }, []);
 
     useEffect(() => {
-        if (responce?.data?.data.length > 0 && responce?.data?.message === "VoterList" && voters.length === 0) {
+        if (responce?.data?.data && responce?.data?.message === "VoterList") {
             setVoter(responce.data.data);
         }
 
         if (responce?.data && Array.isArray(responce.data)) {
             setToggledVoters(responce.data.map(toggle => toggle.voter_id));
         }
-    }, [responce, voters.length]);
-
-    const onClickEdit = (slug) => {
-        navigate(uiRoutes.admin.voter.update.replace(':slug', slug));
-    }
-
-    const onClickDelete = (slug) => {
-        setIsDeleted(false);
-        callAPI('delete', uiRoutes.admin.voter.delete + slug);
-    }
+    }, [responce]);
 
     useEffect(() => {
         if (responce && responce.status === "deleted" && !isDeleted) {
@@ -57,14 +54,28 @@ const ElectionVotingList = () => {
             }
         });
 
-        // Call the API to update the toggle state in the database
         await callAPI('post', "/api/voter-toggles/update", { voter_id: voterId, is_toggled: isToggled });
     };
 
     const handleVotedButtonClick = () => {
         navigate(uiRoutes.admin.election.voted);
     };
+    const handleSearch = (term) => {
+        setSearchTerm(term);
+        setCurrentPage(1); // Reset to first page on search
+    };
 
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const filteredRecords = voters.filter(record =>
+        record.voting_no.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const currentRecords = filteredRecords.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+    // Language content setup
     const [content, setContent] = useState({});
     useEffect(() => {
         let lang = localStorage.getItem('language');
@@ -100,13 +111,14 @@ const ElectionVotingList = () => {
                                             </span>
                                             <div className="ms-auto text-muted">
                                                 Search:
-                                                <div className="ms-2 d-inline-block">
+                                                <SearchBar onSearch={handleSearch} />
+                                                {/* <div className="ms-2 d-inline-block">
                                                     <input
                                                         type="text"
                                                         className="form-control form-control-sm"
                                                         aria-label="Search invoice"
                                                     />
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
@@ -125,9 +137,9 @@ const ElectionVotingList = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {voters.length > 0 && voters.map((data, i) => (
+                                                {currentRecords.length > 0 && currentRecords.map((data, i) => (
                                                     <tr key={data.id}>
-                                                        <th>{i + 1}</th>
+                                                        <th>{indexOfFirstRecord + i + 1}</th>
                                                         <td className='form-check form-switch'>
                                                             <input 
                                                                 type='checkbox' 
@@ -148,73 +160,14 @@ const ElectionVotingList = () => {
                                         </table>
                                     </div>
                                     <div className="card-footer d-flex align-items-center">
-                                        <ul className="pagination m-0 ms-auto">
-                                            <li className="page-item disabled">
-                                                <a className="page-link" href="#" tabIndex={-1} aria-disabled="true">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width={24}
-                                                        height={24}
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth={2}
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M15 6l-6 6l6 6" />
-                                                    </svg>
-                                                    prev
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    1
-                                                </a>
-                                            </li>
-                                            <li className="page-item active">
-                                                <a className="page-link" href="#">
-                                                    2
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    3
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    4
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    5
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    next{" "}
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width={24}
-                                                        height={24}
-                                                        viewBox="0 0 24 24"
-                                                        strokeWidth={2}
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M9 6l6 6l-6 6" />
-                                                    </svg>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <div className='page m-0 ms-auto'>
+                                        <PaginationBar
+                                            totalRecords={voters.length}
+                                            recordsPerPage={recordsPerPage}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -227,4 +180,3 @@ const ElectionVotingList = () => {
 };
 
 export default ElectionVotingList;
-

@@ -1,7 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminAppBody from '../../../components/admin/AdminAppBody'
+import useApiCallHooks from '../../../hooks/useApiCallHooks';
+import { apiRoutes } from '../../../routes/api/apiRoutes';
+import BookCard from '../../../components/admin/BookCard';
+import {  Col } from 'react-bootstrap';
+import PaginationBar from '../../../components/admin/PaginationBar';
 
-const ShowBookCards = () => {
+
+
+const ShowBookCards = (props) => {
+   const [responce, loading, error, callAPI] = useApiCallHooks(); // assuming callAPI is returned by useApiCallHooks
+    const [eBook, setEbook] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 9;
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        callAPI('get',apiRoutes.admin.ebook.list, "");
+    }, []); 
+
+     if (responce?.data?.data?.length > 0 && responce?.data?.message === "eBookLists" && eBook.length === 0) {
+        setEbook(responce.data.data);
+    }
+
+
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = eBook.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
     
     return (
         <AdminAppBody
@@ -45,118 +75,27 @@ const ShowBookCards = () => {
                                 </div>
                             </div>
 
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div class="card">
-
-                                    <img src='https://ashmagautam.files.wordpress.com/2013/11/mcj038257400001.jpg' height={200} width={400} />
-
-                                    <div class="card-body">
-                                        <h3 class="card-title">Book Heading</h3>
-                                        <button className="btn btn-outline-primary w-100">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-
+                            {eBook.map((eBook, index) => (
+          <Col key={index} sm={12} md={6} lg={4} xl={3}>
+            <BookCard eBook={eBook} />
+          </Col>
+        ))}
                         </div>
-                    </div>
+                        <div className='card'>
+                    <div className="card-footer d-flex align-items-center">
+                                    <div className='page m-0 ms-auto'>
+                                        <PaginationBar
+                                            totalRecords={eBook.length}
+                                            recordsPerPage={recordsPerPage}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                        </div>
+                                    </div>
+                                    </div>  
                 </div>
+                    </div>
+                  
             }
         />
     )

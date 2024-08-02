@@ -7,6 +7,7 @@ import marathi from '../../../translationData/marathi.json'
 import hindi from '../../../translationData/hindi.json'
 import english from '../../../translationData/english.json'
 import { apiRoutes } from "../../../routes/api/apiRoutes";
+import PaginationBar from '../../../components/admin/PaginationBar';
 
 const ShowVoterPage = () => {
 
@@ -14,6 +15,9 @@ const ShowVoterPage = () => {
     const navigate = useNavigate();
     const [responce, loading, error, callAPI, statusCode] = useApiCallHooks();
     const [voters, setVoter] = useState([]);
+    const [toggledVoters, setToggledVoters] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 5;
     useEffect(() => {
         callAPI('get', apiRoutes.admin.voter.list, "");
     }, []);
@@ -28,6 +32,18 @@ const ShowVoterPage = () => {
     }
 
 
+    
+    // Calculate current records
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = voters.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+
+
     const onClickDelete = (slug) => {
         setIsDeleted(false)
         callAPI('delete', uiRoutes.admin.voter.delete + slug);
@@ -37,6 +53,7 @@ const ShowVoterPage = () => {
         callAPI('get', 'voters', "");
         setIsDeleted(true)
     }
+
 
     const [content, setContent] = useState({})
 
@@ -126,75 +143,14 @@ const ShowVoterPage = () => {
                                         </table>
                                     </div>
                                     <div className="card-footer d-flex align-items-center">
-                                        <ul className="pagination m-0 ms-auto">
-                                            <li className="page-item disabled">
-                                                <a className="page-link" href="#" tabIndex={-1} aria-disabled="true">
-                                                    {/* Download SVG icon from http://tabler-icons.io/i/chevron-left */}
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width={24}
-                                                        height={24}
-                                                        WorkBox="0 0 24 24"
-                                                        strokeWidth={2}
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M15 6l-6 6l6 6" />
-                                                    </svg>
-                                                    prev
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    1
-                                                </a>
-                                            </li>
-                                            <li className="page-item active">
-                                                <a className="page-link" href="#">
-                                                    2
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    3
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    4
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    5
-                                                </a>
-                                            </li>
-                                            <li className="page-item">
-                                                <a className="page-link" href="#">
-                                                    next{" "}
-                                                    {/* Download SVG icon from http://tabler-icons.io/i/chevron-right */}
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="icon"
-                                                        width={24}
-                                                        height={24}
-                                                        WorkBox="0 0 24 24"
-                                                        strokeWidth={2}
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M9 6l6 6l-6 6" />
-                                                    </svg>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    <div className='page m-0 ms-auto'>
+                                        <PaginationBar
+                                            totalRecords={voters.length}
+                                            recordsPerPage={recordsPerPage}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

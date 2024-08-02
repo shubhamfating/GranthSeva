@@ -1,7 +1,35 @@
-import React from 'react'
-import AdminAppBody from '../../../components/admin/AdminAppBody'
+import React, { useEffect, useState } from 'react'
+import { apiRoutes } from '../../../routes/api/apiRoutes';
+import useApiCallHooks from '../../../hooks/useApiCallHooks';
+import {  Col } from 'react-bootstrap';
+import ComplaintCard from '../../../components/admin/ComplaintCard';
 
-const ComplaintShowCard = () => {
+import AdminAppBody from '../../../components/admin/AdminAppBody'
+import PaginationBar from '../../../components/admin/PaginationBar'
+
+const ComplaintShowCard = (props) => {
+    const [complaint, setComplaint] =useState([]);
+  const [responce, loading, error, callAPI] = useApiCallHooks(); // assuming callAPI is returned by useApiCallHooks
+
+  const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 10;
+  useEffect(() => {
+    callAPI('get', apiRoutes.user.complaint.list, "");
+    //setScheme(responce)
+
+  }, []); // Include callAPI and scheme in the dependency array
+
+  if (responce?.data?.data?.length > 0 && responce?.data?.message === "ComplaintList" && complaint.length === 0) {
+    setComplaint(responce.data.data);
+}
+
+const indexOfLastRecord = currentPage * recordsPerPage;
+const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+const currentRecords = complaint.slice(indexOfFirstRecord, indexOfLastRecord);
+
+const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+};
     return (
         <AdminAppBody
             loading={false}
@@ -10,264 +38,56 @@ const ComplaintShowCard = () => {
                 <div className="page-body">
                     <div className="container-xl">
                         <div className="row row-cards">
+                        <div className='card'>
+                                <div className="card-header">
+                                    <h3 className="card-title text-info">
+                                      Complaints / तक्रारी  </h3>
+                                </div>
+                                <div className="card-body border-bottom py-3">
+                                    <div className="d-flex">
+                                    <div className="form-group">
+                                                    <select className="form-select">
+                                                        <option>Select Catergory</option>
+                                                        <option>Water</option>
+                                                        <option>City cleaning management</option>
+                                                        <option>Road</option>
+                                                        <option>Electricity</option>
+                                                        <option>OTHER</option>
+                                                    </select>
+                                                    
+                                                </div>
 
-                            <div className='col-md-3'>
-                                <div className="card">
-                                    <div className="ribbon bg-green">Completed</div>
-                                    <div className="card-body">
-                                        <h3 className="card-title">Card with text ribbon</h3>
-                                        <p className="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto at consectetur culpa ducimus eum fuga fugiat, ipsa iusto, modi nostrum recusandae reiciendis saepe.</p>
-
-                                        <button className="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-scrollable">
-                                            View
-                                        </button>
-                                    </div>
-                                    <div className="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title">Scrollable modal</h5>
-                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                        eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                        laoreet rutrum faucibus dolor auctor.</p>
-                                                    <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                        consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button type="button" className="btn me-auto" data-bs-dismiss="modal">Close</button>
-                                                </div>
+                                        <div className="ms-auto text-muted">
+                                            Search:
+                                            <div className="ms-2 d-inline-block">
+                                                <input
+                                                    type="text"
+                                                    className="form-control form-control-sm"
+                                                    aria-label="Search invoice"
+                                                />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className='col-md-3'>
-                                <div className="card">
-                                    <div className="ribbon bg-yellow">Pending</div>
-                                    <div className="card-body">
-                                        <h3 className="card-title">Card with text ribbon</h3>
-                                        <p className="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto at consectetur culpa ducimus eum fuga fugiat, ipsa iusto, modi nostrum recusandae reiciendis saepe.</p>
-                                        <button className="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-scrollable">
-                                            View
-                                        </button>
-                                        <div className="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Scrollable modal</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn me-auto" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div className="card">
-                                    <div className="ribbon bg-red">Reject</div>
-                                    <div className="card-body">
-                                        <h3 className="card-title">Card with text ribbon</h3>
-                                        <p className="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto at consectetur culpa ducimus eum fuga fugiat, ipsa iusto, modi nostrum recusandae reiciendis saepe.</p>
-                                        <button className="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-scrollable">
-                                            View
-                                        </button>                                        <div className="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Scrollable modal</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn me-auto" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='col-md-3'>
-                                <div className="card">
-                                    <div className="ribbon bg-red">Reject</div>
-                                    <div className="card-body">
-                                        <h3 className="card-title">Card with text ribbon</h3>
-                                        <p className="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto at consectetur culpa ducimus eum fuga fugiat, ipsa iusto, modi nostrum recusandae reiciendis saepe.</p>
-                                        <button className="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-scrollable">
-                                            View
-                                        </button>                                        <div className="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog" aria-hidden="true">
-                                            <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title">Scrollable modal</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas
-                                                            eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                                                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-                                                            laoreet rutrum faucibus dolor auctor.</p>
-                                                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-                                                            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn me-auto" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-
-
+                            {complaint.map((complaint, index) => (
+          <Col key={index} sm={12} md={6} lg={4} xl={3}>
+            <ComplaintCard complaint={complaint} />
+          </Col>
+        ))}
                         </div>
+                        <div className='card mt-2'>
+                    <div className="card-footer d-flex align-items-center mt-2">
+                                    <div className='page m-0 ms-auto'>
+                                        <PaginationBar
+                                            totalRecords={complaint.length}
+                                            recordsPerPage={recordsPerPage}
+                                            currentPage={currentPage}
+                                            onPageChange={handlePageChange}
+                                        />
+                                        </div>
+                                    </div>
+                                    </div>  
                     </div>
                 </div>
             }

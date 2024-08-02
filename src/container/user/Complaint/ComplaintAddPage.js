@@ -204,6 +204,22 @@ function ComplaintPage() {
                                                                 </span>
                                                             </div>
                                                         </div>
+
+                                                        <div className="col-md-4">
+                                                <div className="form-group">
+                                                    <label className="form-label"><span class="required">*</span>
+                                                        {content.complaint}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder={content.complaint}
+                                                        onChange={(e) => setData({ ...data, complaint: e.target.value })}
+                                                    />
+                                                    <span className="text-danger">{error && error.message === "ValidationError" && error.data.complaint}</span>
+
+                                                </div>
+                                            </div>
                                                         </div>
 
                                         {/* <div className="row">

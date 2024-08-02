@@ -105,6 +105,8 @@ function App() {
         <Route path={uiRoutes.admin.events.create} element={<FunctionCreatePage />} />
         <Route path={uiRoutes.admin.events.show} element={<FunctionsTable />} />
         <Route path={uiRoutes.admin.events.edit} element={<FunctionUpdatePage />} />
+        <Route path={uiRoutes.admin.events.view} element={<FunctionShowCards />} />
+
 
         <Route path={uiRoutes.admin.events.card} element={<FunctionShowCards />} />
 
