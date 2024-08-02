@@ -1,0 +1,74 @@
+.container-width {
+  max-width: 800px !important;
+}
+
+.required {
+  color: red;
+}
+
+.validation-message {
+  color: red;
+  font-size: 14px;
+  /* Adjust font size as needed */
+}
+
+.sub-h1 {
+  color: black;
+  font-weight: bolder;
+}
+
+.nav-bg-color {
+  background-color: #182433;
+
+}
+
+.nav-text-color {
+  color: aliceblue;
+}
+
+.nav-text-color:hover {
+  color: rgb(166, 175, 183);
+}
+
+.nav-text-style {
+  margin-bottom: 2rem;
+  font-weight: 700;
+  margin: 2rem 0 0.5rem;
+  font-size: 2rem;
+  line-height: 2.5rem;
+
+}
+
+.text-color-p {
+  color: aliceblue;
+}
+
+.mini-header-h3 {
+  margin-top: 3rem;
+  color: beige;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+
+}
+
+.color-text-wh {
+  color: aliceblue;
+}
+
+.card-heading-h2 {
+  font-weight: 666;
+  font-size: 25px;
+}
+.nav-text-heading{
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 2.5rem;
+}
+.navbar-fix {
+  position: fixed;
+  width: 100%;
+ 
+}
