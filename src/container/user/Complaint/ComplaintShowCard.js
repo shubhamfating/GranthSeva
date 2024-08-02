@@ -71,12 +71,12 @@ const handlePageChange = (pageNumber) => {
                                 </div>
                             
                                 <Row className="row-cards">
-              {currentRecords.map((complaint, index) => (
-                <Col key={index} sm={12} md={6} lg={4} xl={3}>
-                  <ComplaintCard complaint={complaint} />
-                </Col>
-              ))}
-            </Row>
+      {complaint.map((complaint, index) => (
+        <Col key={index} sm={12} md={6} lg={4}>
+          <ComplaintCard complaint={complaint} />
+        </Col>
+      ))}
+    </Row>
 
           
                     <div className="card-footer d-flex align-items-center mt-2">

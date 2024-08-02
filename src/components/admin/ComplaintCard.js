@@ -7,8 +7,8 @@ const ComplaintCard = ({ complaint }) => {
 <div
   className="card mt-3 mb-0"
   style={{
-    height: '400px',
-    width: '280px',
+    height: '410px',
+    width: '300px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)', // Darker shadow
     borderRadius: '8px', // Optional: adds rounded corners
     overflow: 'hidden' // Optional: ensures that shadow doesn't overflow the card
