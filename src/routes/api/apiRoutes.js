@@ -72,7 +72,14 @@ export const apiRoutes = {
          list: "/api/categories",
          delete: "/api/categories/:id",
          show: "categories-list"
+      },
+
+      rasidant: {
+         add: "add-residant",
+         list: "residant-list"
       }
+
+
    },
 
    user: {

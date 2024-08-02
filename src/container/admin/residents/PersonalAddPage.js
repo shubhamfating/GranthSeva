@@ -4,10 +4,17 @@ import useApiCallHooks from '../../../hooks/useApiCallHooks';
 import marathi from '../../../translationData/marathi.json'
 import hindi from '../../../translationData/hindi.json'
 import english from '../../../translationData/english.json'
+import { apiRoutes } from '../../../routes/api/apiRoutes';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import { uiRoutes } from '../../../routes/ui/uiRoutes';
 
 
 function PersonalAddPage() {
-  const [response, loading, error, callAPI] = useApiCallHooks();
+  const [responce, loading, error, callAPI] = useApiCallHooks();
+  const navigate = useNavigate();
+  
   const [data, setData] = useState({
     first_name: "",
     middle_name: "",
@@ -41,10 +48,22 @@ function PersonalAddPage() {
   })
   const onClickSubmit = () => {
 
-    callAPI('post', 'residents', data)
+    callAPI('post', apiRoutes.admin.rasidant.add, data)
     // navigate("/login/");
     console.log(data);
   }
+
+  useEffect(() => {
+    if (responce && responce.status === 201) {
+        toast.success("Added Successfully");
+        setTimeout(() => {
+            navigate(uiRoutes.admin.residents.show);
+        }, 1000);
+    }
+}, [responce, navigate]);
+
+
+
   const [content, setContent] = useState({})
   useEffect(() => {
     let lang = localStorage.getItem('language')
@@ -61,6 +80,18 @@ function PersonalAddPage() {
       loading={loading}
       heading={"Add Personal Details"}
       content={
+     <>
+        <ToastContainer
+                        position="top-center"
+                        autoClose={500}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                    />
         <div className="page-body">
           <div className="container-xl">
             <div className="row row-cards">
@@ -398,12 +429,9 @@ function PersonalAddPage() {
                             <label className="form-label">{content.current_status} </label>
                             <select className="form-select"
                               onChange={(e) => setData({ ...data, current_status: e.target.value })}>
-                              <option>{content.select_current_status} </option>
-                              <option> {content.retire}</option>
-                              <option>{content.working}</option>
-                              <option>{content.un_employed}</option>
-                              <option>{content.job_seeker}</option>
-                              <option>{content.other}</option>
+                               <option value="">{content.select_status}</option>
+                                <option value="Active">{content.active}</option>
+                                <option value="Inactive">{content.inactive}</option>
                             </select>
                             <span class="validation-message">{error && error.current_status}</span>
                           </div>
@@ -430,6 +458,8 @@ function PersonalAddPage() {
             </div>
           </div>
         </div>
+
+        </>
       }
     />
   )

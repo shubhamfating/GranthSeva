@@ -5,16 +5,24 @@ import useApiCallHooks from '../../../hooks/useApiCallHooks';
 import marathi from '../../../translationData/marathi.json'
 import hindi from '../../../translationData/hindi.json'
 import english from '../../../translationData/english.json'
+import { apiRoutes } from '../../../routes/api/apiRoutes';
 
 function PersonalTablePage() {
     const navigate = useNavigate();
     const [responce, loading, error, callAPI] = useApiCallHooks(); // assuming callAPI is returned by useApiCallHooks
+    const [resident, setResident] = useState([]);
+    
+    
     useEffect(() => {
-        callAPI('get', 'residents', responce);
+        callAPI('get', apiRoutes.admin.rasidant.list, "");
         //setScheme(responce)
 
     }, []); // Include callAPI and scheme in the dependency array
 
+
+    if (responce?.data?.data?.length > 0 && responce?.data?.message === "ResidentLists" && resident.length === 0) {
+        setResident(responce.data.data);
+    }
     const onClickEdit = (id) => {
         navigate('/admin-scheme-uppdate/' + id)
     }
@@ -72,10 +80,10 @@ function PersonalTablePage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {responce.map((data, i) => (
+                                            {resident.map((data, i) => (
                                                 <tr>
 
-                                                    <td>{data.id}</td>
+                                                    <td>{i+1}</td>
                                                     <td>{data.first_name} {data.middle_name} {data.last_name}</td>
                                                     <td>{data.occupation} </td>
                                                     <td>{data.caste}</td>
